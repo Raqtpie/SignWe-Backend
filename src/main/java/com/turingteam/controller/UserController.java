@@ -3,13 +3,13 @@ package com.turingteam.controller;
 import com.turingteam.common.BaseContext;
 import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.User;
+import com.turingteam.domain.dto.UserDto;
 import com.turingteam.service.UserService;
 import com.turingteam.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,16 +24,14 @@ public class UserController {
 
     /**
      * 注册
-     * @param user 用户信息
+     * @param userDto 用户信息
      * @return 注册结果
      */
     @Operation(summary = "注册")
-    @Parameters({
-            @Parameter(name = "className", description = "用户班级", required = true),
-            @Parameter(name = "name", description = "用户姓名", required = true),
-    })
     @PostMapping("/register")
-    public ResponseResult<Object> register(@RequestBody User user) {
+    public ResponseResult<Object> register(@RequestBody UserDto userDto) {
+        User user = new User();
+        BeanUtils.copyProperties(userDto, user);
         user.setId(null);
         user.setPermission(0);
         userService.save(user);

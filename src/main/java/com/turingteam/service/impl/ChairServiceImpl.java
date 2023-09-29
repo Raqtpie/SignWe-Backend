@@ -1,6 +1,7 @@
 package com.turingteam.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.turingteam.common.CustomException;
 import com.turingteam.dao.ChairDao;
 import com.turingteam.dao.RecordDao;
 import com.turingteam.dao.UserRecordDao;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements ChairService {
@@ -30,6 +32,9 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
     @Transactional
     public void life(Integer chairId, Integer userId) {
         Chair chair = getById(chairId);
+        if (userId.equals(chair.getUserId())) {
+            throw new CustomException("当前用户不能签退该座位");
+        }
         long now = System.currentTimeMillis();
         long time = chair.getTime();
         // 计算时间差

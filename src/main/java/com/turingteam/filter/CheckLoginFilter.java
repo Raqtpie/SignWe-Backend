@@ -26,7 +26,7 @@ public class CheckLoginFilter implements Filter {
         String requestURI = request.getRequestURI();
 
         //定义不需要处理的路径
-        String[] urls = new String[]{"/login", "/register", "/getLabStatus", "/getChair", "/getChairById", "/getRecord", "/getRecordYesterday", "/doc.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/**", "/error/**", "/webjars/**"};
+        String[] urls = new String[]{"/login", "/register", "/getLabStatus", "/getChair", "/getChairById", "/getRecord", "/getRecordYesterday", "/favicon.ico", "/doc.html/**", "/swagger-ui/**", "/swagger-resources/**", "/v3/**", "/error/**", "/webjars/**"};
 
         boolean check = check(urls, requestURI);
         if (check) {

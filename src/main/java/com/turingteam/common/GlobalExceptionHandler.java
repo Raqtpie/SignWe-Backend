@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomException.class)
     public ResponseResult<String> exceptionHandler(CustomException e) {
         log.error(e.getMessage());
-
         return ResponseResult.badRequest(e.getMessage());
     }
 
