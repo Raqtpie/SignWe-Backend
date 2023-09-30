@@ -31,5 +31,5 @@ public class Chair implements Serializable {
     private Long time;
 
     @Schema(description = "当前落座用户id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer userId;
+    private String userId;
 }

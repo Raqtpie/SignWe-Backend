@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Hidden
 public class RecordDto {
-    private Integer userId;
+    private String userId;
 
     private String username;
 

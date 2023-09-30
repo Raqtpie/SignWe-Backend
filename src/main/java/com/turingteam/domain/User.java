@@ -1,10 +1,8 @@
 package com.turingteam.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.xiaoymin.knife4j.annotations.Ignore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +21,7 @@ public class User implements Serializable {
 
     @TableId(type = IdType.INPUT)
     @Schema(description = "用户id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
-    private Integer id;
+    private String id;
 
     @Schema(description = "用户班级", requiredMode = Schema.RequiredMode.REQUIRED)
     private String className;
@@ -36,8 +34,4 @@ public class User implements Serializable {
 
     @Schema(description = "用户权限", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer permission;
-
-    @TableField(exist = false)
-    @Schema(hidden = true)
-    private String permissionString;
 }

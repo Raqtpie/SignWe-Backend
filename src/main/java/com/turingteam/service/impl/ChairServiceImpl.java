@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements ChairService {
@@ -30,9 +29,9 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
 
     @Override
     @Transactional
-    public void life(Integer chairId, Integer userId) {
+    public void life(Integer chairId, String userId) {
         Chair chair = getById(chairId);
-        if (userId.equals(chair.getUserId())) {
+        if (!userId.equals(chair.getUserId())) {
             throw new CustomException("当前用户不能签退该座位");
         }
         long now = System.currentTimeMillis();

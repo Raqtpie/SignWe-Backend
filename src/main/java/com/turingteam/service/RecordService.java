@@ -11,5 +11,5 @@ public interface RecordService extends IService<Record> {
      * @param userId 用户id
      * @return 记录列表（时间降序）
      */
-    List<Record> getRecordByUserId(Integer userId);
+    List<Record> getRecordByUserId(String userId);
 }

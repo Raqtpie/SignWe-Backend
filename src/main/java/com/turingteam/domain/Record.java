@@ -3,7 +3,6 @@ package com.turingteam.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.github.xiaoymin.knife4j.annotations.Ignore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,7 +26,7 @@ public class Record implements Serializable {
     private Integer id;
 
     @Schema(description = "用户id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Integer userId;
+    private String userId;
 
     @Schema(description = "打卡时长", requiredMode = Schema.RequiredMode.AUTO)
     private Integer time;

@@ -9,7 +9,7 @@ public interface ChairService extends IService<Chair> {
      * @param chairId 座位id
      * @param userId 用户id
      */
-    public void life(Integer chairId, Integer userId);
+    void life(Integer chairId, String userId);
 
     void closeAllChair();
 }

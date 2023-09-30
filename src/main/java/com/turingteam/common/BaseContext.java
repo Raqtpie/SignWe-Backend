@@ -1,13 +1,13 @@
 package com.turingteam.common;
 
 public class BaseContext {
-    private static final ThreadLocal<Long> threadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<String> threadLocal = new ThreadLocal<>();
 
-    public static void setCurrentId(int id) {
-        threadLocal.set((long) id);
+    public static void setCurrentId(String id) {
+        threadLocal.set(id);
     }
 
-    public static int getCurrentId() {
-        return Math.toIntExact(threadLocal.get());
+    public static String getCurrentId() {
+        return threadLocal.get();
     }
 }

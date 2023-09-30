@@ -1,6 +1,8 @@
 package com.turingteam.controller;
 
+import com.turingteam.common.AuthorizationException;
 import com.turingteam.common.BaseContext;
+import com.turingteam.common.CustomException;
 import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.User;
 import com.turingteam.domain.dto.UserDto;
@@ -8,15 +10,21 @@ import com.turingteam.service.UserService;
 import com.turingteam.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @Tag(name = "用户管理", description = "用户管理")
 @RestController
+@Validated
 public class UserController {
 
     @Autowired
@@ -29,10 +37,12 @@ public class UserController {
      */
     @Operation(summary = "注册")
     @PostMapping("/register")
-    public ResponseResult<Object> register(@RequestBody UserDto userDto) {
+    public ResponseResult<Object> register(@RequestBody @Validated UserDto userDto) {
+        if(userService.getById(userDto.getId()) != null) {
+            throw new CustomException("用户已存在");
+        }
         User user = new User();
         BeanUtils.copyProperties(userDto, user);
-        user.setId(null);
         user.setPermission(0);
         userService.save(user);
         return ResponseResult.success("注册成功");
@@ -44,10 +54,10 @@ public class UserController {
      * @return 登录结果
      */
     @Operation(summary = "登录")
-    @Parameter(name = "id", description = "用户id", required = true)
+    @Parameter(name = "id", description = "用户id(微信提供的openid)", required = true)
     @GetMapping("/login")
-    public ResponseResult<Map<String, String>> login(Integer id) {
-        String token = JwtUtil.generateToken(String.valueOf(id));
+    public ResponseResult<Map<String, String>> login(@NotBlank(message = "id不能为空") String id) {
+        String token = JwtUtil.generateToken(id);
         return ResponseResult.success(Map.of("token", token));
     }
 
@@ -57,22 +67,50 @@ public class UserController {
      * @return 用户信息
      */
     @Operation(summary = "修改头像")
-    @Parameter(name = "url", description = "头像url", required = true)
+    @Parameters({
+            @Parameter(name = "url", description = "头像url", required = true),
+            @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
+    })
     @PutMapping("/updateAvatar")
-    public ResponseResult<Object> updateAvatar(String url) {
-        Integer userId = BaseContext.getCurrentId();
+    public ResponseResult<Object> updateAvatar(@NotBlank(message = "url不能为空") String url) {
+        String userId = BaseContext.getCurrentId();
         User user = userService.getById(userId);
         user.setAvatarUrl(url);
         userService.updateById(user);
         return ResponseResult.success("修改成功");
     }
 
+    /**
+     * 获取用户信息
+     * @return 用户信息
+     */
     @Operation(summary = "获取用户信息")
+    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
     @GetMapping("/getUserInfo")
     public ResponseResult<User> getUserInfo() {
-        Integer userId = BaseContext.getCurrentId();
+        String userId = BaseContext.getCurrentId();
         User user = userService.getById(userId);
+        if (user == null) {
+            throw new AuthorizationException("token无效");
+        }
         return ResponseResult.success(user);
+    }
+
+    /**
+     * 更新token
+     * @return token
+     */
+    @Operation(summary = "更新token")
+    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
+    @PutMapping("/updateToken")
+    public ResponseResult<Map<String, String>> updateToken() {
+        String userId = BaseContext.getCurrentId();
+        User user = userService.getById(userId);
+        if (user == null) {
+            return ResponseResult.fail("token无效");
+        }
+        String token = JwtUtil.generateToken(String.valueOf(userId));
+        return ResponseResult.success(Map.of("token", token));
     }
 
     // TODO 管理层：管理用户

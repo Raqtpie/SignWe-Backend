@@ -3,12 +3,11 @@ package com.turingteam.filter;
 import com.turingteam.common.AuthorizationException;
 import com.turingteam.common.BaseContext;
 import com.turingteam.utils.JwtUtil;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.Order;
 import org.springframework.util.AntPathMatcher;
 
 import java.io.IOException;
@@ -33,24 +32,29 @@ public class CheckLoginFilter implements Filter {
             filterChain.doFilter(servletRequest, servletResponse);
             return;
         }
-
+        String token;
         try {
-            String token = request.getHeader("Authorization");
-            if (token == null) {
+            token = request.getHeader("Authorization");
+            if (token == null || token.isEmpty()  || JwtUtil.isTokenExpired(token)) {
                 throw new AuthorizationException("用户未登录或token已过期");
-            } else {
-                String id = JwtUtil.extractSubject(token);
-                BaseContext.setCurrentId(Integer.parseInt(id));
-                if (JwtUtil.isTokenExpired(token)) {
-                    throw new AuthorizationException("用户未登录或token已过期");
-                }
-                filterChain.doFilter(servletRequest, servletResponse);
+            } else if (!JwtUtil.isTokenEffective(token)) {
+                throw new AuthorizationException("token无效");
             }
+            String id = JwtUtil.extractSubject(token);
+            if (id == null) {
+                throw new AuthorizationException("token无效");
+            }
+            BaseContext.setCurrentId(id);
         } catch (Exception e) {
-            request.setAttribute("filter.error", e);
+            Exception exception = e;
+            if (exception instanceof SignatureException) {
+                exception = new AuthorizationException("token无效");
+            }
+            request.setAttribute("filter.error", exception);
             //将异常分发到/error/throw控制器
             request.getRequestDispatcher("/error/throw").forward(servletRequest, servletResponse);
         }
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     /**

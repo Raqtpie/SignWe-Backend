@@ -1,14 +1,16 @@
 package com.turingteam.common;
 
-import com.turingteam.utils.JwtUtil;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @ResponseBody
@@ -33,14 +35,29 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AuthorizationException.class)
     public ResponseResult<Map<String, String>> exceptionHandler(AuthorizationException e) {
         log.error(e.getMessage());
-        String subject;
-        try {
-            subject = String.valueOf(BaseContext.getCurrentId());
-        } catch (Exception ex) {
-            return ResponseResult.unauthorized(e.getMessage());
-        }
-        String token = JwtUtil.generateToken(subject);
-        return ResponseResult.unauthorized(e.getMessage(), Map.of("token", token));
+        return ResponseResult.unauthorized(e.getMessage());
+    }
+
+    /**
+     * 参数校验异常处理方法（Body参数）
+     * @param e 异常
+     * @return 响应结果
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseResult<String> exceptionHandler(MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
+        return ResponseResult.badRequest(Objects.requireNonNull(e.getBindingResult().getFieldError()).getDefaultMessage());
+    }
+
+    /**
+     * 参数校验异常处理方法（Query参数）
+     * @param e 异常
+     * @return 响应结果
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseResult<String> exceptionHandler(ConstraintViolationException e) {
+        log.error(e.getMessage());
+        return ResponseResult.badRequest(e.getMessage().split(":")[1].trim());
     }
 
     /**

@@ -43,15 +43,10 @@ public class RecordController {
      * @return 记录列表（时间降序）
      */
     @Operation(summary = "根据用户id获取记录")
-    @Parameter(
-            name = "Authorization",
-            description = "Token",
-            in = ParameterIn.HEADER,
-            schema = @Schema(type = "string")
-    )
+    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
     @GetMapping("/getRecordByUserId")
     public ResponseResult<List<Record>> getRecordByUserId() {
-        Integer userId = BaseContext.getCurrentId();
+        String userId = BaseContext.getCurrentId();
         List<Record> recordList = recordService.getRecordByUserId(userId);
         return ResponseResult.success(recordList);
     }
@@ -61,15 +56,10 @@ public class RecordController {
      * @return 总时间
      */
     @Operation(summary = "根据用户id获取总时间")
-    @Parameter(
-            name = "Authorization",
-            description = "Token",
-            in = ParameterIn.HEADER,
-            schema = @Schema(type = "string")
-    )
+    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
     @GetMapping("/getTotalTimeByUserId")
     public ResponseResult<UserRecord> getTotalTimeByUserId() {
-        Integer userId = BaseContext.getCurrentId();
+        String userId = BaseContext.getCurrentId();
         UserRecord userRecord = userRecordService.getTotalTimeByUserId(userId);
         return ResponseResult.success(userRecord);
     }

@@ -22,7 +22,7 @@ public class UserRecord implements Serializable {
 
     @TableId(type = IdType.INPUT)
     @Schema(description = "用户id", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Integer userId;
+    private String userId;
 
     @Schema(description = "总时长", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer totalTime;

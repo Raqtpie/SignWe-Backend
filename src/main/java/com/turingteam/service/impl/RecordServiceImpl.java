@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class RecordServiceImpl extends ServiceImpl<RecordDao, Record> implements RecordService {
     @Override
-    public List<Record> getRecordByUserId(Integer userId) {
+    public List<Record> getRecordByUserId(String userId) {
         LambdaQueryWrapper<Record> recordLambdaQueryChainWrapper = new LambdaQueryWrapper<>();
         recordLambdaQueryChainWrapper.eq(Record::getUserId, userId);
         List<Record> list = list(recordLambdaQueryChainWrapper);

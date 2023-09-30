@@ -9,7 +9,7 @@ import java.util.List;
 public interface UserRecordService extends IService<UserRecord> {
     List<RecordDto> getList();
 
-    UserRecord getTotalTimeByUserId(Integer userId);
+    UserRecord getTotalTimeByUserId(String userId);
 
     List<RecordDto> getRecordYesterday();
 }

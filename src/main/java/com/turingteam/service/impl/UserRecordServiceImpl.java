@@ -36,7 +36,7 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
         userRecords.sort((o1, o2) -> o2.getTotalTime() - o1.getTotalTime());
         List<RecordDto> recordDtoList = new ArrayList<>();
         for (UserRecord userRecord : userRecords) {
-            Integer userId = userRecord.getUserId();
+            String userId = userRecord.getUserId();
             User user = userDao.selectById(userId);
             RecordDto recordDto = new RecordDto();
             recordDto.setUserId(userId);
@@ -49,11 +49,10 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
     }
 
     @Override
-    public UserRecord getTotalTimeByUserId(Integer userId) {
+    public UserRecord getTotalTimeByUserId(String userId) {
         LambdaQueryWrapper<UserRecord> userRecordLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userRecordLambdaQueryWrapper.eq(UserRecord::getUserId, userId);
-        UserRecord userRecord = userRecordDao.selectOne(userRecordLambdaQueryWrapper);
-        return userRecord;
+        return userRecordDao.selectOne(userRecordLambdaQueryWrapper);
     }
 
     @Override
@@ -62,9 +61,9 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
         LocalDate previousDate = LocalDate.now().minusDays(1);
         recordLambdaQueryWrapper.eq(Record::getDate, previousDate);
         List<Record> recordList = recordDao.selectList(recordLambdaQueryWrapper);
-        Map<Integer, Integer> integerIntegerMap = new HashMap<>();
+        Map<String, Integer> integerIntegerMap = new HashMap<>();
         for (Record record : recordList) {
-            Integer userId = record.getUserId();
+            String userId = record.getUserId();
             Integer time = record.getTime();
             if (integerIntegerMap.containsKey(userId)) {
                 integerIntegerMap.put(userId, integerIntegerMap.get(userId) + time);
@@ -73,8 +72,8 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
             }
         }
         List<RecordDto> recordDtoList = new ArrayList<>();
-        for (Map.Entry<Integer, Integer> entry : integerIntegerMap.entrySet()) {
-            Integer userId = entry.getKey();
+        for (Map.Entry<String, Integer> entry : integerIntegerMap.entrySet()) {
+            String userId = entry.getKey();
             Integer time = entry.getValue();
             User user = userDao.selectById(userId);
             RecordDto recordDto = new RecordDto();
