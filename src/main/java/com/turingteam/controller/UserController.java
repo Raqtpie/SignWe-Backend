@@ -2,7 +2,6 @@ package com.turingteam.controller;
 
 import com.turingteam.common.AuthorizationException;
 import com.turingteam.common.BaseContext;
-import com.turingteam.common.CustomException;
 import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.User;
 import com.turingteam.domain.dto.UserDto;
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,26 +36,20 @@ public class UserController {
     @Operation(summary = "注册")
     @PostMapping("/register")
     public ResponseResult<Object> register(@RequestBody @Validated UserDto userDto) {
-        if(userService.getById(userDto.getId()) != null) {
-            throw new CustomException("用户已存在");
-        }
-        User user = new User();
-        BeanUtils.copyProperties(userDto, user);
-        user.setPermission(0);
-        userService.save(user);
+        userService.register(userDto);
         return ResponseResult.success("注册成功");
     }
 
     /**
      * 登录
-     * @param id 用户id
+     * @param jsCode 微信提供的code
      * @return 登录结果
      */
     @Operation(summary = "登录")
-    @Parameter(name = "id", description = "用户id(微信提供的openid)", required = true)
+    @Parameter(name = "jsCode", description = "登录时获取的code，可通过wx.login获取", required = true)
     @GetMapping("/login")
-    public ResponseResult<Map<String, String>> login(@NotBlank(message = "id不能为空") String id) {
-        String token = JwtUtil.generateToken(id);
+    public ResponseResult<Map<String, String>> login(@NotBlank(message = "jsCode不能为空") String jsCode) {
+        String token = userService.login(jsCode);
         return ResponseResult.success(Map.of("token", token));
     }
 

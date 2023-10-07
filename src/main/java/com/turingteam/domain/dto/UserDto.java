@@ -5,15 +5,17 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Component
 @Schema(name = "User", description = "用户信息")
 public class UserDto {
-    @Schema(name = "id", description = "微信提供的用户唯一id", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotBlank(message = "id不能为空")
-    private String id;
+    @Schema(name = "jsCode", description = "登录时获取的 code，可通过wx.login获取", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "jsCode不能为空")
+    private String jsCode;
 
     @Schema(name = "name", description = "姓名", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "姓名不能为空")
