@@ -55,6 +55,22 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
         return userRecordDao.selectOne(userRecordLambdaQueryWrapper);
     }
 
+    // FIXME: 此处返回结果为了与GetTotalTimeByUserId一致返回了UserRecord，实际两个接口应该返回RecordDto或新建一个类作为返回结果
+    // FIXME: 由于前端已经完成代码编写，此处暂时不做修改
+    @Override
+    public UserRecord getTotalTimeByUserIdToday(String userId) {
+        LambdaQueryWrapper<Record> recordLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        LocalDate now = LocalDate.now();
+        recordLambdaQueryWrapper.eq(Record::getUserId, userId).eq(Record::getDate, now);
+        List<Record> recordList = recordDao.selectList(recordLambdaQueryWrapper);
+        int totalTime = 0;
+        for (Record record : recordList) {
+            totalTime += record.getTime();
+        }
+        return new UserRecord(userId, totalTime);
+    }
+
+
     @Override
     public List<RecordDto> getRecordYesterday() {
         LambdaQueryWrapper<Record> recordLambdaQueryWrapper = new LambdaQueryWrapper<>();

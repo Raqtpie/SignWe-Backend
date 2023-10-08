@@ -1,7 +1,9 @@
 package com.turingteam.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.turingteam.common.CustomException;
+import com.turingteam.constants.WeChatResponseCode;
 import com.turingteam.dao.UserDao;
 import com.turingteam.domain.User;
 import com.turingteam.domain.dto.UserDto;
@@ -60,9 +62,16 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
                 "&secret=" + secret +
                 "&js_code=" + jsCode +
                 "&grant_type=" + grantType;
-        WeChatResponseDto response = restTemplate.getForObject(apiUrl, WeChatResponseDto.class);
+        String responseStr = restTemplate.getForObject(apiUrl, String.class);
+        if (responseStr == null) {
+            throw new CustomException("微信服务器无法响应，请稍后再试。");
+        }
+        WeChatResponseDto response = JSON.parseObject(responseStr, WeChatResponseDto.class);
         String openid;
         if (response != null) {
+            if (response.getErrcode() == WeChatResponseCode.INVALID_CODE || response.getErrcode() == WeChatResponseCode.USED_CODE) {
+                throw new CustomException("jsCode无效，请稍后再试。");
+            }
             openid = response.getOpenid();
             if (openid == null) {
                 throw new CustomException("无法获取用户ID，请稍后再试。");

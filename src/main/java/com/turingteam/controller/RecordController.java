@@ -65,6 +65,19 @@ public class RecordController {
     }
 
     /**
+     * 获取今日记录
+     * @return 今日总时长
+     */
+    @Operation(summary = "获取今日记录")
+    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
+    @GetMapping("/getTotalTimeByUserIdToday")
+    public ResponseResult<UserRecord> getTotalRecordToday() {
+        String userId = BaseContext.getCurrentId();
+        UserRecord userRecord = userRecordService.getTotalTimeByUserIdToday(userId);
+        return ResponseResult.success(userRecord);
+    }
+
+    /**
      * 获取昨日记录
      * @return 昨日记录
      */

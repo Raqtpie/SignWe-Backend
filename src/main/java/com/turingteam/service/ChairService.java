@@ -11,5 +11,8 @@ public interface ChairService extends IService<Chair> {
      */
     void life(Integer chairId, String userId);
 
+    /**
+     * 强制签退所有椅子，且不计算时长
+     */
     void closeAllChair();
 }
