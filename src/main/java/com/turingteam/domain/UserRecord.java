@@ -24,6 +24,9 @@ public class UserRecord implements Serializable {
     @Schema(description = "用户id", requiredMode = Schema.RequiredMode.REQUIRED)
     private String userId;
 
+    @Schema(description = "总次数", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer totalCount;
+
     @Schema(description = "总时长", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer totalTime;
 }

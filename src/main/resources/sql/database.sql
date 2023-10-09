@@ -27,25 +27,28 @@ CREATE TABLE IF NOT EXISTS record
     id      int auto_increment primary key comment '主键',
     user_id varchar(35) comment '打卡记录对应用户id',
     time    int comment '时长',
+    chair_id int comment '座位号',
     date    date comment '对应日期'
 );
 
 DROP TABLE IF EXISTS user_record;
 CREATE TABLE IF NOT EXISTS user_record
 (
-    user_id    varchar(35) primary key comment '打卡记录对应用户id',
-    total_time int comment '总时长'
+    user_id     varchar(35) primary key comment '打卡记录对应用户id',
+    total_count int comment '总次数',
+    total_time  int comment '总时长'
 );
 
 DROP TABLE IF EXISTS laboratory_status;
 CREATE TABLE IF NOT EXISTS laboratory_status
 (
-    id     int primary key comment '主键',
-    status bool not null comment '实验室开门状态'
+    id       int primary key comment '主键',
+    status   bool not null comment '实验室开门状态',
+    operator varchar(35) comment '操作者'
 );
 
-INSERT INTO laboratory_status (id, status)
-    VALUE (1, false);
+INSERT INTO laboratory_status (id, status, operator)
+    VALUE (1, false, null);
 
 INSERT INTO chair (id, status, time, user_id)
 VALUES (1, false, null, null),

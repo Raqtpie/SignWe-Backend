@@ -19,4 +19,6 @@ public class LabStatus {
     private Integer id;
 
     private Boolean Status;
+
+    private String Operator;
 }

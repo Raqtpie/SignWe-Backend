@@ -20,6 +20,8 @@ public class ScheduledTasks {
     @Autowired
     private LabStatusService labStatusService;
 
+    private static final String DEFAULT_OPERATOR = "图灵管理员";
+
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /**
@@ -29,7 +31,7 @@ public class ScheduledTasks {
     public void closeChairTask() {
         log.info("定时任务执行时间：" + dateFormat.format(new Date()));
         chairService.closeAllChair();
-        labStatusService.updateById(new LabStatus(1, false));
+        labStatusService.updateById(new LabStatus(1, false, DEFAULT_OPERATOR));
         log.info("定时任务执行结束：" + dateFormat.format(new Date()));
     }
 }

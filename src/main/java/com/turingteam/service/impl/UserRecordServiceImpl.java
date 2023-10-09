@@ -42,6 +42,7 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
             recordDto.setUserId(userId);
             recordDto.setUsername(user.getName());
             recordDto.setClassName(user.getClassName());
+            recordDto.setTotalCount(userRecord.getTotalCount());
             recordDto.setTotalTime(userRecord.getTotalTime());
             recordDtoList.add(recordDto);
         }
@@ -63,11 +64,13 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
         LocalDate now = LocalDate.now();
         recordLambdaQueryWrapper.eq(Record::getUserId, userId).eq(Record::getDate, now);
         List<Record> recordList = recordDao.selectList(recordLambdaQueryWrapper);
+        int totalCount = 0;
         int totalTime = 0;
         for (Record record : recordList) {
+            totalCount++;
             totalTime += record.getTime();
         }
-        return new UserRecord(userId, totalTime);
+        return new UserRecord(userId, totalCount, totalTime);
     }
 
 

@@ -31,6 +31,9 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
     @Transactional
     public void life(Integer chairId, String userId) {
         Chair chair = getById(chairId);
+        if (!chair.getStatus()) {
+            throw new CustomException("该座位无人使用，无法签退");
+        }
         if (!userId.equals(chair.getUserId())) {
             throw new CustomException("当前用户不能签退该座位");
         }
@@ -44,15 +47,15 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
             return;
         }
         // 更新记录
-        Record record = new Record(null, userId, (int) minutesDifference, LocalDate.now());
+        Record record = new Record(null, userId, (int) minutesDifference, chairId, LocalDate.now());
         recordDao.insert(record);
         // 更新用户记录
         UserRecord userRecord = userRecordDao.selectById(userId);
         if (userRecord == null) {
-            userRecordDao.insert(new UserRecord(userId, (int) minutesDifference));
+            userRecordDao.insert(new UserRecord(userId, 1, (int) minutesDifference));
         } else {
-            Integer totalTime = userRecord.getTotalTime();
-            userRecord.setTotalTime(totalTime + (int) minutesDifference);
+            userRecord.setTotalCount(userRecord.getTotalCount() + 1);
+            userRecord.setTotalTime(userRecord.getTotalTime() + (int) minutesDifference);
             userRecordDao.updateById(userRecord);
         }
     }

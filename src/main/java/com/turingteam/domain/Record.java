@@ -31,6 +31,9 @@ public class Record implements Serializable {
     @Schema(description = "打卡时长", requiredMode = Schema.RequiredMode.AUTO)
     private Integer time;
 
+    @Schema(description = "座位id", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer chairId;
+
     @Schema(description = "打卡日期", requiredMode = Schema.RequiredMode.AUTO)
     private LocalDate date;
 }

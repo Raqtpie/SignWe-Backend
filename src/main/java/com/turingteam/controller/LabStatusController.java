@@ -3,7 +3,6 @@ package com.turingteam.controller;
 import com.turingteam.common.BaseContext;
 import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.LabStatus;
-import com.turingteam.domain.dto.LabStatusDto;
 import com.turingteam.service.LabStatusService;
 import com.turingteam.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,20 +38,22 @@ public class LabStatusController {
     @Operation(summary = "开放实验室")
     @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
     @PutMapping("/openLab")
-    public ResponseResult<LabStatusDto> openLab() {
+    public ResponseResult<LabStatus> openLab() {
         LabStatus labStatus = labStatusService.getById(1);
         labStatus.setStatus(true);
+        labStatus.setOperator(userService.getById(BaseContext.getCurrentId()).getName());
         labStatusService.updateById(labStatus);
-        return ResponseResult.success(new LabStatusDto(labStatus.getStatus(), userService.getById(BaseContext.getCurrentId()).getName()), "开放实验室成功");
+        return ResponseResult.success(labStatus, "开放实验室成功");
     }
 
     @Operation(summary = "关闭实验室")
     @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
     @PutMapping("/closeLab")
-    public ResponseResult<LabStatusDto> closeLab() {
+    public ResponseResult<LabStatus> closeLab() {
         LabStatus labStatus = labStatusService.getById(1);
         labStatus.setStatus(false);
+        labStatus.setOperator(userService.getById(BaseContext.getCurrentId()).getName());
         labStatusService.updateById(labStatus);
-        return ResponseResult.success(new LabStatusDto(labStatus.getStatus(), userService.getById(BaseContext.getCurrentId()).getName()), "关闭实验室成功");
+        return ResponseResult.success(labStatus, "关闭实验室成功");
     }
 }

@@ -16,5 +16,7 @@ public class RecordDto {
 
     private String className;
 
+    private Integer totalCount;
+
     private Integer totalTime;
 }
