@@ -1,8 +1,11 @@
 package com.turingteam.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +18,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "Chair", description = "座位")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @TableName("chair")
 public class Chair implements Serializable {
     @Serial
@@ -30,6 +34,8 @@ public class Chair implements Serializable {
     @Schema(description = "座位签到时间", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Long time;
 
-    @Schema(description = "当前落座用户id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String userId;
+
+    @TableField(exist = false)
+    private Boolean canOperate;
 }

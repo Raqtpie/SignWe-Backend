@@ -7,12 +7,15 @@ import com.turingteam.domain.Chair;
 import com.turingteam.domain.LabStatus;
 import com.turingteam.service.ChairService;
 import com.turingteam.service.LabStatusService;
+import com.turingteam.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +43,7 @@ public class ChairController {
     @GetMapping("/getChair")
     public ResponseResult<List<Chair>> getChair() {
         List<Chair> chairList = chairService.list();
+        chairList.forEach(chair -> chair.setUserId(null));
         return ResponseResult.success(chairList);
     }
 
@@ -48,10 +52,22 @@ public class ChairController {
      * @return 座位信息
      */
     @Operation(summary = "根据id获取座位信息")
-    @Parameter(name = "id", description = "座位id", required = true)
+    @Parameters({
+            @Parameter(name = "id", description = "座位id", required = true),
+            @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"))
+    })
     @GetMapping("/getChairById")
-    public ResponseResult<Chair> getChairById(@NotNull(message = "id不能为空") Integer id) {
-        Chair chair = chairService.getById(id);
+    public ResponseResult<Chair> getChairById(@NotNull(message = "id不能为空") Integer id, HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        String userId = null;
+        if (authorization != null) {
+            userId = JwtUtil.extractSubject(authorization);
+            if (!JwtUtil.isTokenEffective(authorization) || JwtUtil.isTokenExpired(authorization)) {
+                userId = null;
+            }
+        }
+        Chair chair = chairService.getChairById(id, userId);
+        chair.setUserId(null);
         return ResponseResult.success(chair);
     }
 

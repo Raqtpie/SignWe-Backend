@@ -5,12 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Component
 @Schema(name = "User", description = "用户信息")
 public class UserDto {
     @Schema(name = "jsCode", description = "登录时获取的 code，可通过wx.login获取", requiredMode = Schema.RequiredMode.REQUIRED)

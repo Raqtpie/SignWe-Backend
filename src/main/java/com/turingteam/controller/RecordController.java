@@ -61,6 +61,7 @@ public class RecordController {
     public ResponseResult<UserRecord> getTotalTimeByUserId() {
         String userId = BaseContext.getCurrentId();
         UserRecord userRecord = userRecordService.getTotalTimeByUserId(userId);
+        userRecord.setUserId(null);
         return ResponseResult.success(userRecord);
     }
 
@@ -74,6 +75,7 @@ public class RecordController {
     public ResponseResult<UserRecord> getTotalRecordToday() {
         String userId = BaseContext.getCurrentId();
         UserRecord userRecord = userRecordService.getTotalTimeByUserIdToday(userId);
+        userRecord.setUserId(null);
         return ResponseResult.success(userRecord);
     }
 

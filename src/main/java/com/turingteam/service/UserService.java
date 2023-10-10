@@ -9,7 +9,7 @@ public interface UserService extends IService<User> {
      * 注册
      * @param userDto 用户信息
      */
-    void register(UserDto userDto);
+    String register(UserDto userDto);
 
     /**
      * 登录

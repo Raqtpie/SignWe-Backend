@@ -15,4 +15,11 @@ public interface ChairService extends IService<Chair> {
      * 强制签退所有椅子，且不计算时长
      */
     void closeAllChair();
+
+    /**
+     * 根据id获取座位信息
+     * @param id 座位id
+     * @return 座位信息
+     */
+    Chair getChairById(Integer id, String userId);
 }

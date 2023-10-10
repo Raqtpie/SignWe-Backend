@@ -39,7 +39,6 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
             String userId = userRecord.getUserId();
             User user = userDao.selectById(userId);
             RecordDto recordDto = new RecordDto();
-            recordDto.setUserId(userId);
             recordDto.setUsername(user.getName());
             recordDto.setClassName(user.getClassName());
             recordDto.setTotalCount(userRecord.getTotalCount());
@@ -96,13 +95,13 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
             Integer time = entry.getValue();
             User user = userDao.selectById(userId);
             RecordDto recordDto = new RecordDto();
-            recordDto.setUserId(userId);
             recordDto.setUsername(user.getName());
             recordDto.setClassName(user.getClassName());
             recordDto.setTotalTime(time);
             recordDtoList.add(recordDto);
         }
         recordDtoList.sort((o1, o2) -> o2.getTotalTime() - o1.getTotalTime());
+        recordDtoList.forEach(recordDto -> recordDto.setUserId(null));
         return recordDtoList;
     }
 }

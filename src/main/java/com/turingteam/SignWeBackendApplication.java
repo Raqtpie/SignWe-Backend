@@ -8,10 +8,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 @EnableScheduling
 @PropertySource("classpath:application.yml")
-public class TuringClockBackendApplication {
+public class SignWeBackendApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(TuringClockBackendApplication.class, args);
+        SpringApplication.run(SignWeBackendApplication.class, args);
     }
 
 }

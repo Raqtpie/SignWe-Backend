@@ -3,6 +3,7 @@ package com.turingteam.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "Record", description = "打卡记录")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @TableName("record")
 public class Record implements Serializable {
     @Serial

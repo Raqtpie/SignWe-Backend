@@ -30,7 +30,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     private String grantType;
 
     @Override
-    public void register(UserDto userDto) {
+    public String register(UserDto userDto) {
         String openid = getOpenid(userDto.getJsCode());
         if (getById(openid) != null) {
             throw new CustomException("用户已存在");
@@ -44,6 +44,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (!save) {
             throw new CustomException("注册失败");
         }
+        return JwtUtil.generateToken(openid);
     }
 
     @Override

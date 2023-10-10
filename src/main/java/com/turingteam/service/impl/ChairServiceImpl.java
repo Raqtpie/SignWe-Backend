@@ -73,4 +73,17 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
             }
         }
     }
+
+    @Override
+    public Chair getChairById(Integer id, String userId) {
+        Chair chair = chairDao.selectById(id);
+        chair.setCanOperate(false);
+        if (userId != null && chair.getStatus()) {
+            chair.setCanOperate(userId.equals(chair.getUserId()));
+        }
+        if (!chair.getStatus()) {
+            chair.setCanOperate(true);
+        }
+        return chair;
+    }
 }

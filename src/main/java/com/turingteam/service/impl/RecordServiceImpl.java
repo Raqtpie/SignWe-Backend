@@ -17,6 +17,7 @@ public class RecordServiceImpl extends ServiceImpl<RecordDao, Record> implements
         recordLambdaQueryChainWrapper.eq(Record::getUserId, userId);
         List<Record> list = list(recordLambdaQueryChainWrapper);
         list.sort((o1, o2) -> o2.getId().compareTo(o1.getId()));
+        list.forEach(record -> record.setUserId(null));
         return list;
     }
 }

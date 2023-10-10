@@ -35,9 +35,9 @@ public class UserController {
      */
     @Operation(summary = "注册")
     @PostMapping("/register")
-    public ResponseResult<Object> register(@RequestBody @Validated UserDto userDto) {
-        userService.register(userDto);
-        return ResponseResult.success("注册成功");
+    public ResponseResult<Map<String, String>> register(@RequestBody @Validated UserDto userDto) {
+        String token = userService.register(userDto);
+        return ResponseResult.success(Map.of("token", token), "注册成功");
     }
 
     /**
@@ -85,6 +85,7 @@ public class UserController {
         if (user == null) {
             throw new AuthorizationException("token无效");
         }
+        user.setId(null);
         return ResponseResult.success(user);
     }
 
