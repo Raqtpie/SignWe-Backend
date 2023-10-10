@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.turingteam.common.CustomException;
 import com.turingteam.dao.ChairDao;
 import com.turingteam.dao.RecordDao;
+import com.turingteam.dao.UserDao;
 import com.turingteam.dao.UserRecordDao;
 import com.turingteam.domain.Chair;
 import com.turingteam.domain.Record;
+import com.turingteam.domain.User;
 import com.turingteam.domain.UserRecord;
 import com.turingteam.service.ChairService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
 
     @Autowired
     private UserRecordDao userRecordDao;
+
+    @Autowired
+    private UserDao userDao;
 
     @Override
     @Transactional
@@ -65,7 +70,7 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
      */
     @Override
     public void closeAllChair() {
-        List<Chair> chairList = chairDao.selectList(null);
+        List<Chair> chairList = list();
         for (Chair chair : chairList) {
             if (chair.getStatus()) {
                 chair.setStatus(false);
@@ -83,6 +88,10 @@ public class ChairServiceImpl extends ServiceImpl<ChairDao, Chair> implements Ch
         }
         if (!chair.getStatus()) {
             chair.setCanOperate(true);
+        }
+        User user = userDao.selectById(chair.getUserId());
+        if (user != null) {
+            chair.setUsername(user.getName());
         }
         return chair;
     }

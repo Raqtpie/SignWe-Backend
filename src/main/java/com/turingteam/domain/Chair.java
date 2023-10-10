@@ -37,5 +37,8 @@ public class Chair implements Serializable {
     private String userId;
 
     @TableField(exist = false)
+    private String username;
+
+    @TableField(exist = false)
     private Boolean canOperate;
 }
