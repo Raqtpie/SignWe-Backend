@@ -6,7 +6,6 @@ import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.User;
 import com.turingteam.domain.dto.UserDto;
 import com.turingteam.service.UserService;
-import com.turingteam.utils.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -89,21 +88,12 @@ public class UserController {
         return ResponseResult.success(user);
     }
 
-    /**
-     * 更新token
-     * @return token
-     */
-    @Operation(summary = "更新token")
-    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
-    @PutMapping("/updateToken")
-    public ResponseResult<Map<String, String>> updateToken() {
-        String userId = BaseContext.getCurrentId();
-        User user = userService.getById(userId);
-        if (user == null) {
-            return ResponseResult.fail("token无效");
-        }
-        String token = JwtUtil.generateToken(String.valueOf(userId));
-        return ResponseResult.success(Map.of("token", token));
+    @Operation(summary = "删除用户信息")
+    @Parameter(name = "userId", description = "用户id", required = true)
+    @DeleteMapping
+    public ResponseResult DeleteUser(String userId) {
+        userService.removeById(userId);
+        return ResponseResult.success("删除成功");
     }
 
     // TODO 管理层：管理用户

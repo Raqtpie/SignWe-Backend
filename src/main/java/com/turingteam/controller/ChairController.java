@@ -1,5 +1,7 @@
 package com.turingteam.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.turingteam.common.AuthorizationException;
 import com.turingteam.common.BaseContext;
 import com.turingteam.common.CustomException;
 import com.turingteam.common.ResponseResult;
@@ -8,13 +10,13 @@ import com.turingteam.domain.LabStatus;
 import com.turingteam.service.ChairService;
 import com.turingteam.service.LabStatusService;
 import com.turingteam.utils.JwtUtil;
+import io.micrometer.common.util.StringUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,9 @@ public class ChairController {
     @GetMapping("/getChairById")
     public ResponseResult<Chair> getChairById(@NotNull(message = "id不能为空") Integer id, HttpServletRequest request) {
         String authorization = request.getHeader("Authorization");
+        if (authorization != null && StringUtils.isBlank(authorization)) {
+            throw new AuthorizationException("传入Authorization的情况下，Token不能为空");
+        }
         String userId = null;
         if (authorization != null) {
             userId = JwtUtil.extractSubject(authorization);
@@ -94,6 +99,12 @@ public class ChairController {
         }
         if (chair.getStatus()) {
             throw new CustomException("该座位已被占用");
+        }
+        LambdaQueryWrapper<Chair> chairLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        chairLambdaQueryWrapper.eq(Chair::getUserId, userId);
+        chairLambdaQueryWrapper.eq(Chair::getStatus, true);
+        if (chairService.getOne(chairLambdaQueryWrapper) != null) {
+            throw new CustomException("不能重复签到");
         }
         chair.setStatus(true);
         chair.setTime(System.currentTimeMillis());

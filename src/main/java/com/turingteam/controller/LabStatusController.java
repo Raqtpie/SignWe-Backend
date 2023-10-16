@@ -3,6 +3,7 @@ package com.turingteam.controller;
 import com.turingteam.common.BaseContext;
 import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.LabStatus;
+import com.turingteam.service.ChairService;
 import com.turingteam.service.LabStatusService;
 import com.turingteam.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,9 @@ public class LabStatusController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ChairService chairService;
 
     /**
      * 获取实验室状态
@@ -54,6 +58,7 @@ public class LabStatusController {
         labStatus.setStatus(false);
         labStatus.setOperator(userService.getById(BaseContext.getCurrentId()).getName());
         labStatusService.updateById(labStatus);
+        chairService.closeAllChair();
         return ResponseResult.success(labStatus, "关闭实验室成功");
     }
 }

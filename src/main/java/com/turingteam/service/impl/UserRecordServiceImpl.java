@@ -52,7 +52,7 @@ public class UserRecordServiceImpl extends ServiceImpl<UserRecordDao, UserRecord
     public UserRecord getTotalTimeByUserId(String userId) {
         LambdaQueryWrapper<UserRecord> userRecordLambdaQueryWrapper = new LambdaQueryWrapper<>();
         userRecordLambdaQueryWrapper.eq(UserRecord::getUserId, userId);
-        return userRecordDao.selectOne(userRecordLambdaQueryWrapper);
+        return userRecordDao.selectOne(userRecordLambdaQueryWrapper) == null ? new UserRecord(null, 0, 0) : userRecordDao.selectOne(userRecordLambdaQueryWrapper);
     }
 
     // FIXME: 此处返回结果为了与GetTotalTimeByUserId一致返回了UserRecord，实际两个接口应该返回RecordDto或新建一个类作为返回结果

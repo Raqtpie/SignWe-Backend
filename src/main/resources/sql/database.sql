@@ -5,11 +5,11 @@ USE TuringTeam;
 DROP TABLE IF EXISTS user;
 CREATE TABLE IF NOT EXISTS user
 (
-    id         varchar(35) primary key comment '主键, 用户微信的openid',
-    class_name varchar(30) not null comment '用户所在班级',
-    name       varchar(15) not null comment '用户真实姓名',
-    avatar_url varchar(100) comment '用户头像url',
-    permission int         not null comment '用户权限'
+    id                  varchar(35) primary key comment '主键, 用户微信的openid',
+    class_name          varchar(30) not null comment '用户所在班级',
+    name                varchar(15) not null comment '用户真实姓名',
+    avatar_url          varchar(100) comment '用户头像url',
+    permission          int         not null comment '用户权限'
 );
 
 DROP TABLE IF EXISTS chair;
@@ -24,11 +24,11 @@ CREATE TABLE IF NOT EXISTS chair
 DROP TABLE IF EXISTS record;
 CREATE TABLE IF NOT EXISTS record
 (
-    id      int auto_increment primary key comment '主键',
-    user_id varchar(35) comment '打卡记录对应用户id',
-    time    int comment '时长',
+    id       int auto_increment primary key comment '主键',
+    user_id  varchar(35) comment '打卡记录对应用户id',
+    time     int comment '时长',
     chair_id int comment '座位号',
-    date    date comment '对应日期'
+    date     date comment '对应日期'
 );
 
 DROP TABLE IF EXISTS user_record;

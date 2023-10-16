@@ -7,7 +7,7 @@ import com.turingteam.constants.WeChatResponseCode;
 import com.turingteam.dao.UserDao;
 import com.turingteam.domain.User;
 import com.turingteam.domain.dto.UserDto;
-import com.turingteam.domain.dto.WeChatResponseDto;
+import com.turingteam.domain.wechat.WeChatResponse;
 import com.turingteam.service.UserService;
 import com.turingteam.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         if (responseStr == null) {
             throw new CustomException("微信服务器无法响应，请稍后再试。");
         }
-        WeChatResponseDto response = JSON.parseObject(responseStr, WeChatResponseDto.class);
+        WeChatResponse response = JSON.parseObject(responseStr, WeChatResponse.class);
         String openid;
         if (response != null) {
             if (response.getErrcode() == WeChatResponseCode.INVALID_CODE || response.getErrcode() == WeChatResponseCode.USED_CODE) {
