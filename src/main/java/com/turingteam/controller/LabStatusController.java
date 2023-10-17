@@ -3,6 +3,7 @@ package com.turingteam.controller;
 import com.turingteam.common.BaseContext;
 import com.turingteam.common.ResponseResult;
 import com.turingteam.domain.LabStatus;
+import com.turingteam.domain.User;
 import com.turingteam.service.ChairService;
 import com.turingteam.service.LabStatusService;
 import com.turingteam.service.UserService;
@@ -15,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Tag(name = "实验室状态管理", description = "实验室状态管理")
 @RestController
@@ -45,8 +49,17 @@ public class LabStatusController {
     public ResponseResult<LabStatus> openLab() {
         LabStatus labStatus = labStatusService.getById(1);
         labStatus.setStatus(true);
-        labStatus.setOperator(userService.getById(BaseContext.getCurrentId()).getName());
+        String operator = userService.getById(BaseContext.getCurrentId()).getName();
+        labStatus.setOperator(operator);
         labStatusService.updateById(labStatus);
+        List<User> userList = userService.list();
+        List<String> userIdList = new ArrayList<>();
+        userList.forEach(user -> {
+            if (user.getSubscribeFlag()) {
+                userIdList.add(user.getId());
+            }
+        });
+        labStatusService.sendMsg(userIdList, operator);
         return ResponseResult.success(labStatus, "开放实验室成功");
     }
 

@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS user
     class_name          varchar(30) not null comment '用户所在班级',
     name                varchar(15) not null comment '用户真实姓名',
     avatar_url          varchar(100) comment '用户头像url',
-    permission          int         not null comment '用户权限'
+    permission          int         not null comment '用户权限',
+    subscribe_flag bool        not null comment '用户订阅消息状态'
 );
 
 DROP TABLE IF EXISTS chair;

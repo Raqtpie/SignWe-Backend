@@ -40,6 +40,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         user.setName(userDto.getName());
         user.setClassName(userDto.getClassName());
         user.setPermission(0);
+        user.setSubscribeFlag(false);
         boolean save = save(user);
         if (!save) {
             throw new CustomException("注册失败");

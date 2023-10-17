@@ -88,9 +88,20 @@ public class UserController {
         return ResponseResult.success(user);
     }
 
+    @Operation(summary = "订阅消息")
+    @Parameter(name = "Authorization", description = "Token", in = ParameterIn.HEADER, schema = @Schema(type = "string"), required = true)
+    @PutMapping("/subscribeMsg")
+    public ResponseResult subscribeMsg() {
+        String userId = BaseContext.getCurrentId();
+        User user = userService.getById(userId);
+        user.setSubscribeFlag(true);
+        userService.updateById(user);
+        return ResponseResult.success("订阅成功");
+    }
+
     @Operation(summary = "删除用户信息")
     @Parameter(name = "userId", description = "用户id", required = true)
-    @DeleteMapping
+    @DeleteMapping("/deleteUser")
     public ResponseResult DeleteUser(String userId) {
         userService.removeById(userId);
         return ResponseResult.success("删除成功");

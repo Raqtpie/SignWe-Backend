@@ -36,4 +36,7 @@ public class User implements Serializable {
 
     @Schema(description = "用户权限", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer permission;
+
+    @Schema(description = "用户是否订阅消息", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
+    private Boolean subscribeFlag;
 }
