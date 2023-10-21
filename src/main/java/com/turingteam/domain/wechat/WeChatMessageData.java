@@ -12,5 +12,5 @@ import java.util.Map;
 public class WeChatMessageData {
     private Map<String, String> thing5;
 
-    private Map<String, String> time2;
+    private Map<String, String> date2;
 }

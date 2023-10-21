@@ -73,9 +73,9 @@ public class LabStatusServiceImpl extends ServiceImpl<LabStatusDao, LabStatus> i
             String DateTime = now.format(formatter);
             HashMap<String, String> thing5 = new HashMap<>();
             thing5.put("value", "实验室已开门，开门人：" + operator);
-            HashMap<String, String> time2 = new HashMap<>();
-            time2.put("value", DateTime);
-            WeChatMessageRequest weChatMessageRequestDto = new WeChatMessageRequest(templateId, page, userId, miniProgramState, lang, new WeChatMessageData(thing5, time2));
+            HashMap<String, String> date2 = new HashMap<>();
+            date2.put("value", DateTime);
+            WeChatMessageRequest weChatMessageRequestDto = new WeChatMessageRequest(templateId, page, userId, miniProgramState, lang, new WeChatMessageData(thing5, date2));
             String requestBody = JSON.toJSONString(weChatMessageRequestDto);
             HttpEntity<String> requestEntity = new HttpEntity<>(requestBody);
             ResponseEntity<String> sendMsgResponse = restTemplate.exchange(sendMsgUrl, HttpMethod.POST, requestEntity, String.class);
